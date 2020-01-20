@@ -9,7 +9,6 @@ use App\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
-
 class StartQuizAccess {
 
   public static function verify($productId,$questId){ // get the user's subcribed products
@@ -34,5 +33,4 @@ class StartQuizAccess {
 
 }
 
-
-
+   

@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ForumActivity extends Model
 {
-    
+
     protected $gurarded = [];
 
-     protected $fillable = ['type','user_id'];
+     protected $fillable = ['shop_id', 'type','user_id'];
 
     public function subject(){
 

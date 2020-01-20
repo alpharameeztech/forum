@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
 use App\Http\Controllers\Controller;
+use App\Rules\UniqueShopAndEmail;
+use App\Services\GeoPlugin;
+use App\Traits\TokenBasedRegistration;
+use App\User;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
+
+    protected $shop_id;
+
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -22,6 +30,7 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
+    use TokenBasedRegistration;
 
     /**
      * Where to redirect users after registration.
@@ -37,21 +46,30 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
+
+        $this->shop_id = Cache::get('shop_id');
+
         $this->middleware('guest');
     }
 
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
+     * @throws ValidationException
      */
     protected function validator(array $data)
     {
+        /*A trait method
+         */
+        $this->verify($data);
+
+
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', new UniqueShopAndEmail],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -63,10 +81,36 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+
+
+        try {
+            //get the registering user country
+            $user_country = GeoPlugin::country();
+        } catch (Exception $e) {
+            \Log::info($e);
+            return true;
+        }
+
+        $user = User::create([
+            'shop_id' => $this->shop_id,
             'name' => $data['name'],
+            'slug' => $data['name'] . '-' .  $this->shop_id,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'country' => $user_country
         ]);
+
+        /*
+         * A trait method
+         * that will set the user type
+         * as provided in the parameter
+         * along with shop id
+         * and alias
+         */
+        if( !empty(session('invitation_token')) ) {
+            $this->store($user, $this->shop_id ,'publisher', $data['alias']);
+        }
+
+        return $user;
     }
 }

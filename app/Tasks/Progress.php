@@ -11,10 +11,9 @@ use Illuminate\Support\Facades\DB;
 use App\SubscriptionRepository\UserSubscriptions;
 
 class Progress {
+    
+    public static function result($product_id){ 
 
-   public static function result($product_id){ 
-
-        
         $user_id = Auth::id();
 
         $quest_array = ['1.1','1.2','1.3','1.4','2.1','2.2','2.3','2.4','3.1','3.2','3.3','3.4','4.1','4.2','4.3','4.4'];
@@ -28,23 +27,23 @@ class Progress {
            ->where('score','>=', 60 )
            ->max('quest_level');
            if(is_null($quest_level)){
-              return 0;//null;
+              return null;
            }
            else{
-                foreach ($quest_array as $key => $value) {               
+                foreach ($quest_array as $key => $value) {
                   if($quest_level == $value){
                     $val= $int_array[$key];
                 }
               }   
-            
-            
+
+
            $progress =  number_format(($val / 16) * 100,0);   
          
            return $progress;
          
         }
-
-    }   
+       
+    }     
 
 }
 

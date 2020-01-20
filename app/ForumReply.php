@@ -2,19 +2,21 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\ForumFavorite;
+use App\Scopes\ShopScope;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\RecordForumActivity;
 use App\ForumThread;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class ForumReply extends Model
 {
     use RecordForumActivity;
 
     protected $guarded = [] ;
-    
+
     protected $with = ['owner', 'favorites'];
 
     protected $appends = ['isFavorited', 'isBest'];
@@ -22,6 +24,14 @@ class ForumReply extends Model
     protected static function boot(){
 
         parent::boot();
+
+        /*
+         * The "booting" method of the model.
+         * Global Query scope
+         *Adding the constraint of the shop id
+         * @return void
+         */
+        static::addGlobalScope(new ShopScope);
 
         static::created(function ($reply){
 
@@ -31,7 +41,6 @@ class ForumReply extends Model
 
         static::deleted(function ($reply){
 
-            //if a deleting reply marked as bestReply of a thread, make sure to mark bestReply of a thread as Null 
             if($reply->isBest()){
 
                 $reply->thread->update([
@@ -45,7 +54,7 @@ class ForumReply extends Model
 
 
     }
-    
+
     public function owner(){
 
         // as i am using the owner name instead of user,
@@ -63,9 +72,12 @@ class ForumReply extends Model
         $user_id = Auth::id();
         //if the no record found for the sma user id  for the sam reply then make it favorite
         if(!$this->favorites()->where(['user_id' => $user_id ])->exists() ){
-            $this->favorites()->create(['user_id' => $user_id ]);
+            $this->favorites()->create([
+                'shop_id' => Cache::get('shop_id'),
+                'user_id' => $user_id
+            ]);
         }
-        
+
     }
 
     public function isFavorited(){
@@ -86,23 +98,20 @@ class ForumReply extends Model
     public function path(){
 
         return $this->thread->path() . "#reply-{$this->id}";
-    
+
     }
 
     public function unFavorite(){
 
         $attributes = ['user_id' =>  Auth::id()];
 
-//        $this->favorites()->where($attributes)->delete();
+        //$this->favorites()->where($attributes)->delete();
 
-        //
         // delete the favorited replies from the activity table if deleting from the favorites table
         $this->favorites()->where($attributes)->get()->each(function ( $favorite){
 
             $favorite->delete();
         });
-
-        //$this->favorites()->where($attributes)->get()->each()->delete();
     }
 
     public function wasJustPublished(){
@@ -116,7 +125,7 @@ class ForumReply extends Model
     //         $this->attributes['body'] = preg_replace('/@([\w\-]+)/','<a href="/forum/profiles/$1">$0</a>', $body);
     //     } catch (\Exception $e) {
     //         \Log::info($e);
-            
+
     //     }
 
     // }

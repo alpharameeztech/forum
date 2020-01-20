@@ -1,0 +1,355 @@
+body {
+    /*background-image: linear-gradient(to top, #3452a4, #304da0, #2b499d, #274499, #224095);*/
+    color: #636b6f;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+    letter-spacing: 0.1px;
+    text-rendering: optimizeLegibility;
+    background-color: #000000;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg fill-opacity='1'%3E%3Cpolygon fill='%23332c00' points='1600 160 0 460 0 350 1600 50'/%3E%3Cpolygon fill='%23665800' points='1600 260 0 560 0 450 1600 150'/%3E%3Cpolygon fill='%23988400' points='1600 360 0 660 0 550 1600 250'/%3E%3Cpolygon fill='%23cbb000' points='1600 460 0 760 0 650 1600 350'/%3E%3Cpolygon fill='%23fedc00' points='1600 800 0 800 0 750 1600 450'/%3E%3C/g%3E%3C/svg%3E");
+    background-attachment: fixed;
+    background-size: cover;
+}
+.logo {
+    width: 240px;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    margin: auto;
+    border-radius: 5px;
+}
+.full-height {
+    height: 80vh;
+}
+
+.footer {
+    position: absolute !important;
+    bottom: 9px;
+    width: 100%;
+    color:#fff
+}
+
+.flex-center {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.position-ref {
+    position: relative;
+}
+
+.top-right {
+    position: absolute;
+    right: 10px;
+    top: 18px;
+}
+
+.content {
+    text-align: center;
+    width: 100%;
+}
+
+.links {
+    width: 600px;
+    margin: 0px auto;
+    overflow: visible;
+    text-align: left;
+}
+
+.messageWrap {
+    text-align: center;
+    /*color: #0d47a1;*/
+    color: #FFF;
+}
+
+.m-b-md {
+    margin-bottom: 30px;
+}
+
+input[type=text], textarea {
+    transition: all 0.30s ease-in-out;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    border: 0px none rgb(48, 55, 59);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+    box-sizing: border-box;
+    color: rgb(48, 55, 59);
+    font-size: 16px;
+    font-weight: 400;
+    height: 51.2px;
+    line-height: 21px;
+    margin: 0px 10px 0px 0px;
+    padding: 16px;
+    text-align: start;
+    width: 422px;
+}
+
+input[type=text]:focus, textarea:focus {
+    box-shadow: 0px 0px 10px 0px #202E78;
+}
+
+button.clean-gray {
+    padding: 1.0625em 1.875em;
+    border-radius: 5px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1em;
+    line-height: 1.133;
+    text-align: center;
+    user-select: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);
+    background-color: #f1cd0e;
+    color: #000000;
+    border: 0 solid transparent;
+    transition: all 0.3s ease-in-out;
+}
+button.slim {
+    padding: 10px 15px;
+    font-weight: 300;
+    margin-top: 10px;
+}
+button.light {
+    background: linear-gradient(to bottom, white, #f9fafb);
+    color: #000;
+    border: 1px solid #c4cdd5;
+}
+button.light:hover {
+    background: linear-gradient(to bottom, #f9fafb, #f4f6f8);
+}
+
+button.clean-gray:hover {
+    background-color: #ba9e08;
+}
+button.clean-gray:active {
+    background-color: #111b51;
+}
+.info {
+    color: #ccc;
+    padding: 7px 0px 0px 4px;
+    display: block;
+    font-size: 14px;
+    opacity: 0.6;
+}
+@media only screen and (max-width: 600px) {
+    .links {
+        width: auto;
+        text-align: center;
+    }
+    .links input[type="text"] {
+        width: 90%;
+        margin-bottom: 14px;
+    }
+    .fifty {
+        margin-right: 0px !important;
+    }
+}
+.loading {
+    background:url("/images/loading.gif") 50% 50% no-repeat #656565;
+    width: 100px;
+    height: 100px;
+    margin: 0px auto;
+}
+
+.message a {
+    color: #f06292;
+}
+
+a:not(.plain) {
+    position: relative;
+    display: inline-block;
+    transition: .3s;
+    text-decoration: none;
+    color: #3d3d3d;
+}
+a:not(.plain)::after {
+    position: absolute;
+    bottom: .3em;
+    left: 0;
+    content: '';
+    width: 100%;
+    height: 1px;
+    background-color: grey;
+    opacity: 0;
+    transition: .3s;
+}
+a:not(.plain):hover::after {
+    bottom: 0;
+    opacity: 1;
+}
+.message {
+    font-size: 20px;
+    line-height: 1.5em;
+}
+.fifty {
+    width: 48%;
+    float: left;
+    padding: 0px 10px;
+    margin-right: -10px;
+}
+.verticalSep {
+    border-right: 1px solid #4dd0e1;
+}
+.container {
+    width: 90%;
+}
+
+body a {
+    cursor: pointer;
+    color: #4B4B4B;
+    text-decoration: none;
+}
+body section {
+    margin-bottom: 90px;
+}
+body section h1 {
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: normal;
+    letter-spacing: 10px;
+    font-size: 25px;
+    line-height: 1.5;
+}
+body section p, body section a {
+    text-align: center;
+    letter-spacing: 3px;
+}
+
+span {
+    letter-spacing: 0px;
+}
+
+p {
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+/* Styles for Accordion */
+.toggle:last-child {
+    border-bottom: 1px solid #dddddd;
+}
+.toggle .toggle-title {
+    position: relative;
+    display: block;
+    border-top: 1px solid #dddddd;
+    margin-bottom: 6px;
+}
+.toggle .toggle-title h3 {
+    font-size: 20px;
+    margin: 0px;
+    line-height: 1;
+    cursor: pointer;
+    font-weight: 200;
+}
+.toggle .toggle-title img {
+    display: block;
+    float: left;
+    height: 28px;
+    margin: -5px 10px 0px 0px;
+    opacity: 0.7;
+}
+.toggle .toggle-inner {
+    padding: 7px 25px 10px 25px;
+    display: none;
+    margin: -7px 0 6px;
+}
+.toggle .toggle-inner div {
+    max-width: 100%;
+}
+.toggle .toggle-title .title-name {
+    display: block;
+    padding: 25px 25px 14px;
+    font-weight: 400;
+}
+.toggle .toggle-title a i {
+    font-size: 22px;
+    margin-right: 5px;
+}
+.toggle .toggle-title i {
+    position: absolute;
+    background: url("http://arielbeninca.com/Storage/plus_minus.png") 0px -24px no-repeat;
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s ease;
+    margin: 20px;
+    right: 0;
+}
+.toggle .toggle-title.active i {
+    background: url("http://arielbeninca.com/Storage/plus_minus.png") 0px 0px no-repeat;
+}
+table a, .toggle-inner a {
+    color: #00b0ff !important;
+}
+table {
+    width: 100%;
+    padding: 10px;
+    border-collapse: collapse;
+}
+table td, table th {
+    padding: 5px;
+    text-align: left;
+    line-height: 20px;
+}
+table th {
+    background: none #81d4fa;
+}
+.mark, mark {
+    padding: .2em;
+    background-color: #fcf8e3;
+}
+/*.content img {
+    box-shadow: 0px 0px 45px -11px Grey;
+}*/
+.inlinePre {
+    color: #0d47a1;
+    float: left;
+    padding: 0px 20px;
+    font-weight: bold;
+}
+.halfWidth {
+    width: 46%;
+    padding: 2%;
+    float: left;
+}
+.fullWidth {
+    width: 96%;
+    padding: 2%;
+}
+.contactForm input[type="text"], .contactForm textarea {
+    width: 100%;
+}
+.contactForm label {
+    color: #90a4ae;
+}
+.contactForm textarea {
+    height: 140px;
+    resize: none;
+}
+.contactForm {
+    padding: 0px;
+}
+.actions {
+    background: none #fff;
+    text-align: right;
+    width: 96%;
+    border-top: 1px solid #dfe3e8;
+    padding: 1.5% 2%;
+}
+.actions .container {
+    padding: 0px;
+}
+.actions button {
+    margin: 0px;
+}
+#contact .loading {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 999;
+    opacity: 0.7;
+}

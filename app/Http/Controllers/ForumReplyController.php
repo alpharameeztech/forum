@@ -8,6 +8,7 @@ use App\ForumThread;
 use App\Inspections\Spam;
 use App\Notifications\YouWereMentioned;
 use App\User;
+use Illuminate\Support\Facades\Cache;
 
 class ForumReplyController extends Controller
 {
@@ -22,8 +23,8 @@ class ForumReplyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index($channelId, ForumThread $thread)
-    {   
-      
+    {
+
         return $thread->replies()->paginate(10);
     }
 
@@ -45,52 +46,35 @@ class ForumReplyController extends Controller
      */
     public function store($channelId, ForumThread $thread,Request $request)
     {
-      
+
+
         try {
 
             $this->validateRequest();
-            
+
             $reply = $thread->addReply([
+                'shop_id' => Cache::get('shop_id'),
                 'body' => request('body'),
                 'user_id' => auth()->id()
             ]);
-            
+
             //increment user experience
             $reply->owner->updateExperience(30);
 
-            // preg_match_all('/\@([^\s\.]+)/', $reply->body, $matches);
-            
-            // \Log::info($matches);
-
-            // $names = $matches[1];
-
-            // foreach ($names as $name) {
-                
-            //     $user  = User::whereName($name)->first();
-
-            //     if($user){
-
-            //         $user->notify(new YouWereMentioned ($reply));
-            //     }
-            // }
-
 
         } catch (\Exception $e) {
-                
             \Log::info($e);
-
-            return response('Sorry, your new reply could not be saved at this time.',422);
+            return response('Sorry, your reply could not be saved at this time.',422);
 
         }
-       
+
         //if the request is ajax call
         if( request()->expectsJson()){
 
             return $reply->load('owner');
         }
 
-        return back()
-                ->with('flash-message','Your reply has been posted!');
+        return back()->with('flash-message','Your reply has been posted!');
     }
 
     /**
@@ -124,9 +108,10 @@ class ForumReplyController extends Controller
      */
     public function update(Request $request, $forumReply)
     {
+
         try {
-           
-            $this->validateRequest();   
+
+            $this->validateRequest();
 
             $forumReply = ForumReply::find($forumReply);
 
@@ -135,12 +120,10 @@ class ForumReplyController extends Controller
             $forumReply->update([
                 'body' => request('body')
             ]);
-            
+
         } catch (\Exception $e) {
             return response('Sorry, your reply could not be saved at this time.',422);
         }
-        
-        
 
     }
 
@@ -151,17 +134,17 @@ class ForumReplyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($forumReply)
-    {   
-        
+    {
+
         $forumReply =  ForumReply::find($forumReply);
-        
+
         $this->authorize('update', $forumReply); //will be verified through policy
 
         $forumReply->delete();
 
         // if the request type is ajax then just pass the response and not redirect back
         if(request()->expectsJson()){
-            
+
             return response(['status' => 'Reply deleted']);
         }
 
@@ -169,13 +152,13 @@ class ForumReplyController extends Controller
 
 
     }
-    
+
     protected function validateRequest(){
 
-        // try {
-            
+         // try {
+
         //     if(Gate::denies('create', new ForumReply) ){
-               
+
         //         return response('You are posting too erarly. Please take a break.',422);
 
         //     }
@@ -183,12 +166,12 @@ class ForumReplyController extends Controller
         //     //throw $th;
         // }
 
-        //$this->authorize('create', new ForumReply); 
+       // $this->authorize('create', new ForumReply);
 
         $this->validate(request(), [
             'body' => 'required'
         ]);
-        
+
         resolve(Spam::class)->detect(request('body'));// with resolve you dont have to inject into class constructor
 
     }

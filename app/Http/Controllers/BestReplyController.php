@@ -47,23 +47,16 @@ class BestReplyController extends Controller
         //     'best_forum_reply_id' => $reply->id
 
         // ]);
-        
 
         $reply->thread->markAsBest($reply);
-        
-       // \Log::info($reply->owner->id);
 
-        // if the user marking his own reply as best then dont add up points on his experience
         if($reply->owner->id !=  $reply->thread->creator->id) {
 
-            //increment user experience
             $reply->owner->updateExperience(150);
 
         }else{
-
+           
         }
-        
-
     }
 
     /**

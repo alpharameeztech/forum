@@ -15,5 +15,5 @@ class ForumFavorite extends Model
 
         return $this->morphTo();
     }
-
+    
 }

@@ -29,7 +29,8 @@ class ForumReplyPolicy
      * @return mixed
      */
     public function create(User $user)
-    {  
+    {
+        
         $lastReply =  $user->fresh()->lastReply;
         
         //if there is no reply of a user

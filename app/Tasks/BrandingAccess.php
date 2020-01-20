@@ -14,7 +14,7 @@ class BrandingAccess {
 
    public static function verify($product_id){ // get the user's subcribed products
 
-        
+    
         $user_id = Auth::id();
 
         $verify= UserTrainingHistory::where('user_id', $user_id)
@@ -23,6 +23,7 @@ class BrandingAccess {
         ->where('score', '>=', 60.00)
         ->exists(); // this is a collection
 
+       
         return $verify;
 
     }   

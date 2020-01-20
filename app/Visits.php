@@ -8,15 +8,21 @@ class Visits
     protected $thread;
 
     public function __construct($thread)
-    {   
-        
+    {
+
         $this->thread = $thread;
-    
+
     }
 
     public function record(){
 
         Redis::incr($this->cacheKey());
+
+        /*
+         * Saving the visits count on the DB tabletoo
+         */
+        $this->thread->visits_count = ++$this->thread->visits_count;
+        $this->thread->save();
 
         return $this;
     }
@@ -31,7 +37,7 @@ class Visits
         Redis::del($this->cacheKey());
 
         return $this;
-        
+
     }
 
     protected function cacheKey(){

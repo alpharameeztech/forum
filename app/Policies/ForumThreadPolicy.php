@@ -19,7 +19,7 @@ class ForumThreadPolicy
      */
     public function view(User $user, ForumThread $forumThread)
     {
-        //
+        
     }
 
     /**
@@ -42,8 +42,8 @@ class ForumThreadPolicy
      */
     public function update(User $user, ForumThread $forumThread)
     {
-        //return $forumThread->user_id === $user->id; // user who created a thread can perform this action
-        return false; // not even a user who created this thread can delete this thread
+        return $forumThread->user_id === $user->id; // user who created a thread can perform this action
+        //return false; // not even a user who created this thread can delete this thread
     }
 
     /**
@@ -55,30 +55,7 @@ class ForumThreadPolicy
      */
     public function delete(User $user, ForumThread $forumThread)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the forum thread.
-     *
-     * @param  \App\User  $user
-     * @param  \App\ForumThread  $forumThread
-     * @return mixed
-     */
-    public function restore(User $user, ForumThread $forumThread)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the forum thread.
-     *
-     * @param  \App\User  $user
-     * @param  \App\ForumThread  $forumThread
-     * @return mixed
-     */
-    public function forceDelete(User $user, ForumThread $forumThread)
-    {
-        //
+       
+        return false;
     }
 }

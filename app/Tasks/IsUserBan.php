@@ -14,7 +14,8 @@ class IsUserBan {
 
    public static function get(){
 
-        
+      
+
         return Auth::user()->is_ban;
 
 

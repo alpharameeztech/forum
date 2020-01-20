@@ -1,0 +1,120 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+
+.channelType a{
+    float: right;
+}
+
+.dark{
+    background-color: var(--dark);
+}
+
+
+.disabledButton{
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #ddd;
+    border: none;
+}
+.trix-button-group--file-tools{
+    display: none !important;
+}
+
+.newDiscussionCta {
+    display: block;
+    margin: 0 auto;
+    width: 80%;
+    box-shadow: #d7e8fd 0px 4px 10px 1px;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding-top: .83rem;
+    padding-bottom: .83rem;
+    font-size: .75rem;
+}
+.card{
+    border: 0.5px solid rgba(218, 197, 197, 0.125);
+}
+
+.py-4 > .row{
+    margin:0 ;
+}
+.userSetting{
+    float: right;
+}
+.v-application--wrap{
+    min-height: auto !important;
+}
+
+/**
+================================= thats a vue component styling ===========================
+ */
+.v-alert{
+    position: fixed !important;
+    z-index: 11111;
+    bottom: 0;
+    right: 1%;
+    width: auto;
+}
+/**
+================================= thats a vue component styling ended ===========================
+ */
+
+.newDiscussionDiv{
+    padding: 0 !important;
+}
+
+.searchThreadBox{
+    margin-top: -24px;
+}
+.threadAuthor{
+    float: right
+}
+.indexThreadsPagination nav{
+    float: right;
+    padding-right: 1%;
+}
+
+.topBar{
+    margin-bottom: -10px !important;
+}
+.tribute-container{
+    //top: 0 !important;
+    //left: 0 !important;
+    //position: relative !important;
+    //margin-top: 30px !important;
+    //width: 20% !important;
+    //height: 98px !important;
+    //overflow: hidden !important;
+}
+.frontUserNotifyBell{
+    float: right;
+    margin-top: 0px;
+}
+
+.frontUserNotifyBell .dropdown-menu{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.frontUserNotifyBell .dropdown-menu p{
+    padding: 7px;
+    margin: 0 !important;
+}
+.thread .card-body .theme--light.v-application{
+    background:none;
+}
+.thread .card-body .v-application .grey.lighten-2 {
+    background: none !important;
+}
+span.visits{
+    margin-left: 8px;
+}
+.editThreadCta{
+    margin-top: 15px;
+}

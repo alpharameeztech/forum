@@ -11,12 +11,27 @@ use Illuminate\Support\Facades\DB;
 use App\SubscriptionRepository\UserSubscriptions;
 
 class IsUnderFreeTrial {
+
+   public static function verify(){ // get the user's subcribed products
+
+        
+
+        if(Auth::user()->current_billing_plan == null){
+
+            return '/free';
+        }
+        else{
+            return '';
+        }
+
+    } 
     
     
     public static function get(){ // get the user's subcribed products
 
         
-        if(Auth::user()->onGenericTrial()){
+
+        if(Auth::user()->current_billing_plan == null){
 
             return 'true';
         }

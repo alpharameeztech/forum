@@ -12,7 +12,7 @@ use App\SubscriptionRepository\UserSubscriptions;
 
 class Score {
 
-   public static function result($product_id){ 
+    public static function result($product_id){ 
 
         
         $user_id = Auth::id();

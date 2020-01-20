@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class All
 {
     public static function get()
-    { 
+    {
 
        $channels =  ForumChannel::get();
 

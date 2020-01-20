@@ -22,18 +22,17 @@ class BrandingResource {
         $branding_id = $request->id; // get the requested product branding id
      
         $obj= Branding::where('product_id', $product_id)
-        ->where('id', $branding_id)
-        ->where('type', 'file')
-        ->pluck('file'); // this is a collection
+            ->where('id', $branding_id)
+            ->where('type', 'file')
+            ->pluck('file'); // this is a collection
 
-        $var = Storage::disk("s3")->get($obj[0]); // for s3 location
-      
+        $var = storage_path() . '/app/public/'. $obj[0];
+    
         $img = Image::make($var);
 
         return $img->response('png');
 
     }   
-
 
 }
 

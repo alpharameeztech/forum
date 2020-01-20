@@ -23,7 +23,7 @@ class ThreadHasNewReply
      *
      * @return void
      */
-    public function __construct($thread, $reply)
+     public function __construct($thread, $reply)
     {
         
         $this->thread = $thread;

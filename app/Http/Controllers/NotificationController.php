@@ -79,8 +79,6 @@ class NotificationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user, $notificationId)
-    {        
-            \Log::info('marking notification as read');
-        auth()->user()->notifications()->findorFail($notificationId)->markAsRead();
+    {        auth()->user()->notifications()->findorFail($notificationId)->markAsRead();
     }
 }

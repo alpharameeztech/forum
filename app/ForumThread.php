@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\ShopScope;
 use Illuminate\Database\Eloquent\Model;
 use App\ForumChannel;
 use App\Traits\RecordForumActivity;
@@ -11,6 +12,8 @@ use App\Notifications\ThreadWasUpdated;
 use App\Events\ThreadHasNewReply;
 use App\Visits;
 use App\ForumReply;
+use Illuminate\Support\Facades\Cache;
+use Stevebauman\Purify\Purify;
 
 class ForumThread extends Model
 {
@@ -20,24 +23,37 @@ class ForumThread extends Model
 
     protected $appends = ['isSubscribedTo'];
 
+    /**
+     * The "booting" method of the model.
+     * Global Query scope
+     *Adding the constraint of the shop id
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new ShopScope);
+    }
+
     public function getRouteKeyName(){
 
         return 'slug';
     }
 
     public function getReplyCountAttribute(){
-        
+
         return $this->replies()->count();
 
     }
 
     public function path(){
 
-        return "/threads/{$this->channel->slug}/{$this->slug}"; // adddin a slug channel name i.e threads/php/1
+        return "/threads/{$this->channel->slug}/{$this->slug}";  // adddin a slug channel name i.e threads/php/1
 
     }
     public function replies(){
-        
+
         return $this->hasMany(ForumReply::class)->withCount('favorites');
     }
 
@@ -59,42 +75,16 @@ class ForumThread extends Model
         return $reply;
     }
 
-    // public function notifySubscribers($reply){
-
-    //     foreach ($this->subscriptions as $subscription) {
-            
-    //         if($subscription->user_id !=  $reply->user_id){
-
-    //             $subscription->user->notify( new ThreadWasUpdated($this, $reply));
-                
-    //             \Log::info('adding into notfications table');
-
-    //             //$subscription->user->notify( $reply);
-                
-    //         }
-         
-
-    //     }
-
-    // }
-
     public function channel(){
 
         return $this->belongsTo(ForumChannel::class, 'forum_channel_id');
     }
 
-    // public static function boot(){
-    //     parent::boot();
-
-    //     static::deleting(function($thread){
-    //         $thread->replies->delete();
-    //     });
-    // }
 
     public function subscribe(){
 
         $this->subscriptions()->create([
-
+            'shop_id' => Cache::get('shop_id'),
             'user_id' => Auth::id()
 
         ]);
@@ -102,9 +92,9 @@ class ForumThread extends Model
     }
 
     public function unsubscribe(){
-        
+
         $user_id = Auth::id();
-        
+
         return $this->subscriptions()->where('user_id', $user_id)->delete();
 
     }
@@ -116,7 +106,7 @@ class ForumThread extends Model
     }
 
     public function getIsSubscribedToAttribute(){
-      
+
         $user_id = Auth::id();
 
         $exists =  $this->subscriptions()
@@ -124,12 +114,12 @@ class ForumThread extends Model
                     ->exists();
 
         return $exists ? 1 : 0;
-        
+
     }
 
     public function hasUpdatesFor($user = null){
 
-       
+
 
         // $user = $user ?: Auth::user();
 
@@ -149,28 +139,33 @@ class ForumThread extends Model
     public function setSlugAttribute($value){
 
         if(static::whereSlug($value)->exists()){
-            
+
             $latestModelId = Static::max('id');
 
             $this->attributes['slug'] = $value . '-' . ++$latestModelId;
-            
+
         }else{
 
             $this->attributes['slug'] = $value;
 
         }
-       
+
     }
 
     public function markAsBest(ForumReply $reply){
-        
+
         $this->update([
             'best_forum_reply_id' => $reply->id
         ]);
     }
 
     public function recentReply(){
-        
+
         return $this->replies()->latest()->first();
+    }
+
+    public function getBodyAttribute($body){
+
+        return \Purify::clean($body);
     }
 }

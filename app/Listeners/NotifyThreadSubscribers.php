@@ -27,20 +27,16 @@ class NotifyThreadSubscribers
      */
     public function handle(ThreadHasNewReply $event)
     {
-        
         foreach ($event->thread->subscriptions as $subscription) {
-            
+
             if($subscription->user_id !=  $event->reply->user_id){
 
                 $subscription->user->notify( new ThreadWasUpdated($event->thread, $event->reply));
-                
-               // \Log::info('adding into notfications table');
 
                 //$subscription->user->notify( $reply);
-                
-            }
-         
-        }
 
+            }
+
+        }
     }
 }

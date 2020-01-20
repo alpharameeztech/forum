@@ -2,17 +2,23 @@
 
 namespace App;
 
-use Laravel\Spark\User as SparkUser;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use App\ForumThread;
 use App\ForumActivity;
-use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
 use App\ForumInfo;
+use Illuminate\Support\Facades\Cache;
+use App\Scopes\ShopScope;
 
-class User extends SparkUser
+class User extends Authenticatable
 {
-
     use Notifiable;
+
+    const ADMIN_TYPE = 'admin';
+
+    const DEFAULT_TYPE = 'member';
 
     /**
      * The attributes that are mass assignable.
@@ -20,35 +26,16 @@ class User extends SparkUser
      * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
+        'name', 'alias', 'slug', 'email', 'password', 'type', 'shop_id', 'provider', 'provider_id', 'avatar', 'country'
     ];
 
-    public function getRouteKeyName(){
-
-        return 'name';
-    }
-
     /**
-     * The attributes excluded from the model's JSON form.
+     * The attributes that should be hidden for arrays.
      *
      * @var array
      */
     protected $hidden = [
-        'password',
-        'remember_token',
-        'authy_id',
-        'country_code',
-        'phone',
-        'card_brand',
-        'card_last_four',
-        'card_country',
-        'billing_address',
-        'billing_address_line_2',
-        // 'billing_city',
-        'billing_zip',
-        // 'billing_country',
-        'extra_billing_information',
+        'password', 'remember_token',
     ];
 
     /**
@@ -57,70 +44,83 @@ class User extends SparkUser
      * @var array
      */
     protected $casts = [
-        'trial_ends_at' => 'datetime',
-        'uses_two_factor_auth' => 'boolean',
+        'email_verified_at' => 'datetime',
     ];
 
-    public function threads(){
-
-        return $this->hasMany(ForumThread::class);
-
+    public function getRouteKeyName()
+    {
+        return 'slug'; // 'name';
     }
 
-    public function activity(){
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new ShopScope);
+    }
+
+    public function threads()
+    {
+        return $this->hasMany(ForumThread::class);
+    }
+
+    public function activity()
+    {
         return $this->hasMany(ForumActivity::class);
     }
 
-    public function read($thread){
-
+    public function read($thread)
+    {
         cache()->forever(
-            
             $this->visitedThreadCacheKey($thread),
-
             Carbon::now()
         );
-        
-
     }
 
-    public function visitedThreadCacheKey($thread){
-
-      return sprintf("users.%s.visits.%s", $this->id, $thread->id);
+    public function visitedThreadCacheKey($thread)
+    {
+        return sprintf("users.%s.visits.%s", $this->id, $thread->id);
     }
 
-    public function lastReply(){
-
+    public function lastReply()
+    {
         return $this->hasOne(ForumReply::class)->latest();
-        
     }
 
-    public function forumInfo(){
-
+    public function forumInfo()
+    {
         return $this->hasOne(ForumInfo::class);
-
     }
 
-    public function updateExperience($incrementBy){
+    public function updateExperience($incrementBy)
+    {
+        if ($this->forumInfo != null) {
+            $user_experience = $this->forumInfo->experience;
 
-        if ($this->forumInfo != NULL) {
+            $this->forumInfo->update([
 
-                $user_experience = $this->forumInfo->experience;
-            
-                $this->forumInfo->update([
-
+                'shop_id' => Cache::get('shop_id'),
                 'experience' => $user_experience + $incrementBy
 
             ]);
-        }else { 
-            
+        } else {
             $this->forumInfo()->create([
+                'shop_id' => Cache::get('shop_id'),
                 'user_id' => $this->id,
-                
                 'experience' => $incrementBy
             ]);
         }
 
-       return true;
+        return true;
+    }
 
+    public function isAdmin()
+    {
+        return $this->type === self::ADMIN_TYPE;
+    }
+
+    public function isPublisher()
+    {
+        return $this->type === 'publisher';
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\ForumActivity;
-use App\Tasks\Forum\TrendingThreads; 
+use App\Tasks\Forum\TrendingThreads;
 
 class ForumProfileController extends Controller
 {
@@ -46,12 +46,12 @@ class ForumProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user, TrendingThreads $trendingThreads)
+    public function show(User $user,  TrendingThreads $trendingThreads)
     {
-    //    $activies =   $this->getActivity($user); // this will pick the user relation with Activity
-    
         $activies = ForumActivity::feed($user);
-        
+
+
+
         return view('forum.profiles.show',[
             'user' => $user,
             // 'user_threads' => $user->threads()->paginate(10)
@@ -95,16 +95,4 @@ class ForumProfileController extends Controller
         //
     }
 
-    // public function getActivity(User $user){
-
-    //     // return $user->activity ;
-    //     //return $user->activity()->latest()->with('subject')->get();
-    //     //return $user->activity()->latest()->with('subject')->get();
-    //     //return $user->activity()->latest()->with('subject')->take(50)->get()->groupBy('subject_type'); // group by subject type
-        
-    //     //group by dates
-    //     return $user->activity()->latest()->with('subject')->take(50)->get()->groupBy(function ($acivity){
-    //         return $acivity->created_at->format('Y-m-d');
-    //     });
-    // }
 }
