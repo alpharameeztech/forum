@@ -26,7 +26,7 @@
     },
     "dependencies": {
         "fusioncharts": "^3.14.1",
-        "moment": "^2.24.0",
+        "moment": "^2.29.2",
         "tributejs": "^4.0.0",
         "trix": "^1.2.1",
         "vue-color": "^2.7.0",
